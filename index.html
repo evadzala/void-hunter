@@ -31,10 +31,10 @@ body::before {
 
 #video {
   position:absolute; inset:0; width:100%; height:100%;
-  object-fit:cover; transform:scaleX(-1);
+  object-fit:cover;
   opacity:0.4; filter:saturate(0.2) brightness(0.6);
 }
-#hand-canvas { position:absolute; inset:0; width:100%; height:100%; transform:scaleX(-1); z-index:5; }
+#hand-canvas { position:absolute; inset:0; width:100%; height:100%; z-index:5; }
 #game-canvas { position:absolute; inset:0; width:100%; height:100%; z-index:6; pointer-events:none; }
 
 /* scanlines */
@@ -592,7 +592,7 @@ async function initCamera() {
 
   // First request camera directly to get a meaningful error before loading MediaPipe Camera
   try {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode:'user' } });
+    const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode:'environment' } });
     // Got permission — stop this test stream, let MediaPipe take over
     stream.getTracks().forEach(t=>t.stop());
   } catch(err) {
@@ -606,6 +606,7 @@ async function initCamera() {
     const cam = new Camera(video, {
       onFrame: async()=>{ await mp.send({image:video}); },
       width:1280, height:720,
+      facingMode: 'environment',
     });
     await cam.start();
     document.getElementById('loading-screen').style.display='none';
